@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\diaa\\project\\AlexApps_Assignment\\Market\\Market.csproj": {}
+    "E:\\AlexApps\\MarketTask\\Market.csproj": {}
   },
   "projects": {
-    "D:\\diaa\\project\\AlexApps_Assignment\\Market\\Market.csproj": {
+    "E:\\AlexApps\\MarketTask\\Market.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\diaa\\project\\AlexApps_Assignment\\Market\\Market.csproj",
+        "projectUniqueName": "E:\\AlexApps\\MarketTask\\Market.csproj",
         "projectName": "Market",
-        "projectPath": "D:\\diaa\\project\\AlexApps_Assignment\\Market\\Market.csproj",
-        "packagesPath": "C:\\Users\\abdo0\\.nuget\\packages\\",
-        "outputPath": "D:\\diaa\\project\\AlexApps_Assignment\\Market\\obj\\",
+        "projectPath": "E:\\AlexApps\\MarketTask\\Market.csproj",
+        "packagesPath": "C:\\Users\\Di63\\.nuget\\packages\\",
+        "outputPath": "E:\\AlexApps\\MarketTask\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\abdo0\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Di63\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -39,11 +39,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -73,6 +68,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.6, )"
+            },
+            "System.Linq": {
+              "target": "Package",
+              "version": "[4.3.0, )"
             }
           },
           "imports": [
@@ -94,7 +93,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
