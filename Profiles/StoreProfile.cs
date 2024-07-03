@@ -8,10 +8,10 @@ namespace Market
     {
         public StoreProfile()
         {
+
             CreateMap<Store, StoreReadDto>();
             CreateMap<StoreCreateDto, Store>();
             CreateMap<StoreEditDto, Store>();
-            CreateMap<StoreDeleteDto, Store>();
         }
     }
 }

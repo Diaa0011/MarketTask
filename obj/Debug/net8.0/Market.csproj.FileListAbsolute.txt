@@ -261,3 +261,8 @@ E:\AlexApps\MarketTask\obj\Debug\net8.0\refint\Market.dll
 E:\AlexApps\MarketTask\obj\Debug\net8.0\Market.pdb
 E:\AlexApps\MarketTask\obj\Debug\net8.0\Market.genruntimeconfig.cache
 E:\AlexApps\MarketTask\obj\Debug\net8.0\ref\Market.dll
+E:\AlexApps\MarketTask\bin\Debug\net8.0\Microsoft.OpenApi.dll
+E:\AlexApps\MarketTask\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+E:\AlexApps\MarketTask\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+E:\AlexApps\MarketTask\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+E:\AlexApps\MarketTask\obj\Debug\net8.0\Market.MvcApplicationPartsAssemblyInfo.cs
