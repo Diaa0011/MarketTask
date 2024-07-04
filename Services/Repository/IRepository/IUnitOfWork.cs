@@ -5,5 +5,6 @@
         public IProductRepository Products { get; }
         public IStoreRepository Stores { get; }
         void Save();
+        Task<int> SaveAsync();
     }
 }

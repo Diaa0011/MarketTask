@@ -9,8 +9,10 @@ namespace Market
         public ProductProfile()
         {
             // Source -> Target
-            CreateMap<Product, ProductReadDto>();
+            CreateMap<Product, ProductReadDto>()
+                .ForMember(dest => dest.StoreId, opt => opt.MapFrom(src => src.store.Id));
             CreateMap<ProductCreateDto, Product>();
+            CreateMap<Product, ProductEditDto>();
             CreateMap<ProductEditDto, Product>();
             CreateMap<ProductDeleteDto, Product>();
         }

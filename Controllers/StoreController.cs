@@ -24,16 +24,20 @@ namespace Market.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllStores()
         {
-            var Stores = await _unitOfWork.Stores.GetAllAsync();
+            var stores_fetch = await _unitOfWork.Stores.GetAllStoresWithProductsAsync();
 
-            return Ok(_mapper.Map<List<StoreReadDto>>(Stores));
+            var stores = _mapper.Map<IEnumerable<StoreReadDto>>(stores_fetch);
+
+           return Ok(stores);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStoreById(int id)
         {
-            var Store = await _unitOfWork.Stores.GetByIdAsync(id);
+            var store_fetch = await _unitOfWork.Stores.GetStoreByIdWithProductsAsync(id);
+            
+            var store = _mapper.Map<StoreReadDto>(store_fetch);
 
-            return Ok(_mapper.Map<StoreReadDto>(Store));
+            return Ok(store);
         }
 
         [HttpPost]
@@ -50,9 +54,8 @@ namespace Market.Controllers
             
             _unitOfWork.Save();
 
-            var idOfStore = await _unitOfWork.Stores.FindAsync(c=> c.Name == newStore.Name);
-
-            return CreatedAtAction(nameof(GetStoreById), new { id = newStore.Id }, newStore);
+            var s = _unitOfWork.Stores.FindByNameAsync(newStore.Name);
+            return CreatedAtAction(nameof(GetStoreById), new { id = s.Id }, newStore);
         }
 
         [HttpPatch("{id}")]
@@ -85,6 +88,14 @@ namespace Market.Controllers
                 return NotFound();
             }
             var storeDeletion = _mapper.Map<Store>(StoreDeleteDto);
+
+            var productsToDelete = await _unitOfWork.Products.FindAllAsync(c => c.store == storeDeletion);
+
+            foreach(Product prodcut in productsToDelete)
+            {
+                _unitOfWork.Products.Delete(prodcut);
+                _unitOfWork.Save();
+            }
 
             _unitOfWork.Stores.Delete(storeDeletion);
 

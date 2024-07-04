@@ -266,3 +266,7 @@ E:\AlexApps\MarketTask\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 E:\AlexApps\MarketTask\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 E:\AlexApps\MarketTask\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 E:\AlexApps\MarketTask\obj\Debug\net8.0\Market.MvcApplicationPartsAssemblyInfo.cs
+E:\AlexApps\MarketTask\bin\Debug\net8.0\Microsoft.AspNetCore.JsonPatch.dll
+E:\AlexApps\MarketTask\bin\Debug\net8.0\Newtonsoft.Json.dll
+E:\AlexApps\MarketTask\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+E:\AlexApps\MarketTask\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll

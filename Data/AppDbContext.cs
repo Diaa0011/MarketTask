@@ -11,13 +11,20 @@ namespace Market.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Store>()
+                        .HasMany(s => s.Products)
+                        .WithOne(p => p.store);
             modelBuilder.Entity<Product>()
                         .Property(p => p.Price)
                         .HasColumnType("decimal(18, 2)");
             modelBuilder.Entity<Product>()
                         .Property(p => p.VAT)
                         .HasColumnType("decimal(18, 2)");
+            modelBuilder.Entity<Product>()
+                        .HasOne(p => p.store)
+                        .WithMany(s => s.Products)
+                        .IsRequired();
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Store>().HasData(
                 new Store

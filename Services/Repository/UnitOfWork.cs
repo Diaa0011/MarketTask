@@ -1,5 +1,7 @@
 ﻿using Market.Data;
 using Market.Services.Repository.IRepository;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
 namespace Market.Services.Repository
 {
@@ -24,6 +26,11 @@ namespace Market.Services.Repository
         public void Save()
         {
             _context.SaveChangesAsync();
+        }
+
+        public async Task<int> SaveAsync()
+        {
+             return await _context.SaveChangesAsync();
         }
 
     }
