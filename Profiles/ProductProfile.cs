@@ -14,7 +14,6 @@ namespace Market
             CreateMap<ProductCreateDto, Product>();
             CreateMap<Product, ProductEditDto>();
             CreateMap<ProductEditDto, Product>();
-            CreateMap<ProductDeleteDto, Product>();
         }
     }
 }

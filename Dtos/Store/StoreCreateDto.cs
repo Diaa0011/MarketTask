@@ -8,6 +8,11 @@ namespace Market.Dtos.Store
         public string Name { get; set; }
         [Required]
         public string Address { get; set; }
+        [Required]
+        public int ShippingCost { get; set; }
+        [Required]
+        public decimal VATPercent { get; set; }
+
 
 
     }
