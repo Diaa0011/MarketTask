@@ -5,6 +5,7 @@ using Market.Dtos.Product;
 using Market.Model;
 using Market.Models;
 using Market.Services.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,7 @@ namespace Market.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles ="user")]
     public class CartController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;

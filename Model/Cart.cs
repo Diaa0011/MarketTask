@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Market.Model
 {
@@ -9,6 +12,10 @@ namespace Market.Model
         public IEnumerable<CartItem> CartItems{get;set;}
         public int TotalShippingCost { get; set; }
         public decimal TotalAmount { get; set; }
-        //public User user {get;set;}
+
+        //public string UserId { get; set; }
+
+        //[ForeignKey("UserId")]
+        //public IdentityUser User { get; set; }
     }
 }

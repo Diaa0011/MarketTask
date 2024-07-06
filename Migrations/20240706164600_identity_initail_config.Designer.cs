@@ -4,6 +4,7 @@ using Market.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Market.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240706164600_identity_initail_config")]
+    partial class identity_initail_config
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +41,7 @@ namespace Market.Migrations
 
                     b.HasKey("CartId");
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("Market.Model.CartItem", b =>
@@ -79,7 +82,7 @@ namespace Market.Migrations
 
                     b.HasIndex("productId");
 
-                    b.ToTable("CartItems", (string)null);
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("Market.Models.Product", b =>
@@ -107,7 +110,7 @@ namespace Market.Migrations
 
                     b.HasIndex("storeId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Market.Models.Store", b =>
@@ -134,7 +137,7 @@ namespace Market.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stores", (string)null);
+                    b.ToTable("Stores");
 
                     b.HasData(
                         new

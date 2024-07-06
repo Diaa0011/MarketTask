@@ -1,10 +1,11 @@
 using Market.Model;
 using Market.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Market.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -63,7 +64,10 @@ namespace Market.Data
             modelBuilder.Entity<Cart>()
                         .Property(c => c.TotalAmount)
                         .HasColumnType("decimal(18,2)");
-
+            //modelBuilder.Entity<Cart>()
+            //  .HasOne(c => c.User)
+            //  .WithOne() // Use WithOne() for one-to-one relationship
+            //  .HasForeignKey<Cart>(c => c.UserId);
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Store>().HasData(
