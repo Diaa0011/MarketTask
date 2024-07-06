@@ -20,7 +20,7 @@ namespace Market.Data
                 entity.Property(e => e.VATPercent)
                     .HasColumnType("decimal(5,2)"); // Define precision and scale
             });
-            
+
             modelBuilder.Entity<Product>()
                         .Property(p => p.Price)
                         .HasColumnType("decimal(18, 2)");
@@ -53,12 +53,16 @@ namespace Market.Data
             modelBuilder.Entity<CartItem>()
                 .HasOne(ci => ci.product);
 
+
             modelBuilder.Entity<Cart>()
                 .HasKey(c => c.CartId);
 
             modelBuilder.Entity<Cart>()
                         .HasMany(c => c.CartItems)
                         .WithOne(c => c.cart);
+            modelBuilder.Entity<Cart>()
+                        .Property(c => c.TotalAmount)
+                        .HasColumnType("decimal(18,2)");
 
             base.OnModelCreating(modelBuilder);
 

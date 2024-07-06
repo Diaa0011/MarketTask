@@ -3,6 +3,7 @@ using Market.Dtos.Cart;
 using Market.Dtos.CartItemDto;
 using Market.Dtos.Product;
 using Market.Model;
+using Market.Models;
 using Market.Services.Repository.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -45,10 +46,11 @@ namespace Market.Controllers
         {
             var carts = await _unitOfWork.Carts.GetAllCartsAsync();
 
-            var cartsShow = _mapper.Map<List<CartReadDto>>(carts);
+            var cartsShow = _mapper.Map<IEnumerable<CartReadDto>>(carts);
 
             return Ok(cartsShow);
         }
+
 
         [HttpGet("{cartId}")]
         public async Task<IActionResult> GetCartById(int cartId)
@@ -58,9 +60,16 @@ namespace Market.Controllers
             var cartShow = _mapper.Map<CartReadDto>(cart);
             return Ok(cartShow);
         }
+        [HttpGet("items")]
+        public async Task<IActionResult> GetAllCartItems()
+        {
+            var cartItems = await _unitOfWork.CartItems.GetAllAsync();
 
+            var cartItemsDto = _mapper.Map<IEnumerable<CartItemReadDto>>(cartItems);
+            return Ok(cartItemsDto);
+        }
         [HttpPost("{cartId}/add")]
-        public async Task<IActionResult> AddProductToCart(int cartId, ProductToCartDto productToCart)
+        public async Task<IActionResult> ProductToCartUpSert(int cartId, ProductToCartDto productToCart)
         {
             var cart = await _unitOfWork.Carts.GetCartByIdAsync(cartId);
 
@@ -71,61 +80,61 @@ namespace Market.Controllers
 
             var product = await _unitOfWork.Products.GetProductByIdAsync(productToCart.Id);
             var store = await _unitOfWork.Stores.FindAsync(c => c.Id == product.store.Id);
-            if (_unitOfWork.Carts.HasCartItems(cartId))
+            var cartItem = await _unitOfWork.CartItems.FindAsync(c => c.CartItemIdHelper == product.Id);
+            var vatset = 0;
+            if (product.VAT == 0)
             {
-                var cartItem = await _unitOfWork.CartItems.FindAsync(c => c.product.Id == product.Id);
-                if (product.VAT == 0)
-                {
-                    product.VAT = product.Price * store.VATPercent;
-                }
-                if (cartItem == null)
-                {
-                    
-                    var newCartItem = new CartItemCreateDto
-                    {
-                        Quantity = productToCart.Quantity,
-                        Price = productToCart.Quantity * product.Price,
-                        TotalVat = productToCart.Quantity * product.VAT,
-                        TotalPrice = (productToCart.Quantity * product.Price)+(productToCart.Quantity * product.VAT)
-
-
-                    };
-                    var cartToAdd = _mapper.Map<CartItem>(newCartItem);
-                    cartToAdd.product = product;
-                    cartToAdd.cart = cart;
-                    await _unitOfWork.CartItems.AddAsync(cartToAdd);
-
-                }
-                else
-                {
-                    if (cartItem.Quantity != productToCart.Quantity)
-                    {
-                        cartItem.Quantity = productToCart.Quantity;
-                        cartItem.Price = productToCart.Quantity * product.Price;
-                        cartItem.TotalVat = productToCart.Quantity * product.VAT;
-                        cartItem.TotalPrice = (productToCart.Quantity * product.Price) + (productToCart.Quantity * product.VAT);
-                    }
-                }
+                vatset = (int)(product.Price * store.VATPercent);
             }
             else
             {
-                
+                vatset = (int)(product.VAT);
+            }
+            if (cartItem == null)
+            {
                 var newCartItem = new CartItemCreateDto
                 {
+                    CartItemIdHelper = product.Id,
                     Quantity = productToCart.Quantity,
                     Price = productToCart.Quantity * product.Price,
-                    TotalVat = productToCart.Quantity * product.VAT,
-                    TotalPrice = (productToCart.Quantity * product.Price) + (productToCart.Quantity * product.VAT)
+                    TotalVat = productToCart.Quantity * vatset,
+                    ShippingCost = store.ShippingCost,
+                    TotalPrice = (productToCart.Quantity * product.Price) + (productToCart.Quantity * vatset) +(store.ShippingCost)
+
+
                 };
                 var cartToAdd = _mapper.Map<CartItem>(newCartItem);
                 cartToAdd.product = product;
                 cartToAdd.cart = cart;
+
                 await _unitOfWork.CartItems.AddAsync(cartToAdd);
-
             }
+            else
+            {
 
+                cartItem.Quantity = productToCart.Quantity;
+                cartItem.Price = productToCart.Quantity * product.Price;
+                cartItem.TotalVat = productToCart.Quantity * vatset;
+                cartItem.TotalPrice = (productToCart.Quantity * product.Price) + (productToCart.Quantity * vatset) + (store.ShippingCost);
+
+                _unitOfWork.CartItems.Update(cartItem);
+            }
+            cart.TotalAmount = cartCalculator(cart);
             await _unitOfWork.SaveAsync();
-            return Ok("Items Addes Successfuly");
+            return Ok("Items Added/updated Successfuly");
+        }
+
+        private decimal cartCalculator(Cart cart)
+        {
+            decimal TotalAmount = 0;
+            int TotalShipping = 0;
+            var cartItems = cart.CartItems;
+            foreach(var cartiItem in cartItems)
+            {
+                TotalShipping += cartiItem.ShippingCost;
+                TotalAmount += (decimal)cartiItem.TotalPrice;
+            }
+            return TotalAmount;
         }
 
     }

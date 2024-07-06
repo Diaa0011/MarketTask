@@ -10,7 +10,10 @@ namespace Market.Profiles
     {
         public CartItemProfile()
         {
-            CreateMap<CartItemCreateDto, CartItem>();  // Map cartId to Cart.CartId
+            CreateMap<CartItemCreateDto, CartItem>();
+            CreateMap<CartItem, CartItemReadDto>()
+                .ForMember(dest => dest.cartId, opt => opt.MapFrom(src => src.cart.CartId));
+            CreateMap<CartItemEditDto, CartItem>();
 
         }
     }

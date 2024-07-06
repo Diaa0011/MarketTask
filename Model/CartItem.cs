@@ -9,6 +9,7 @@ namespace Market.Model
     {
         [Key]
         public int CartItemId {  get; set; }
+        public int CartItemIdHelper { get; set; }
 
         public int Quantity { get; set; }
 
@@ -18,6 +19,7 @@ namespace Market.Model
 
         public decimal TotalPrice { get; set; }
 
+        public int ShippingCost { get; set; }
 
         public Product product { get; set; }
 
