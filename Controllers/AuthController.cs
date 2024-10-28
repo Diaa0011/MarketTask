@@ -12,20 +12,21 @@ namespace Market.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository _authRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly UserManager<IdentityUser> _userManager;
 
+        private readonly IAuthService _authService;
+
         public AuthController(IUnitOfWork unitOfWork,
             IMapper mapper,
             UserManager<IdentityUser> userManager,
-            IAuthRepository authRepository)
+            IAuthService authService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
-            _authRepository = authRepository;
+            _authService = authService;
         }
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser(UserDto user)
@@ -34,11 +35,16 @@ namespace Market.Controllers
             {
                 return BadRequest("fix your data first!");
             }
-            if (await _authRepository.Register(user))
-            {
-                return Ok("User Added Successfully");
-            }
-            return BadRequest("Something Went Wrong");
+
+            var newUser = await _authService.Register(user);
+
+            return CreatedAtAction(nameof(RegisterUser), new {
+                id = newUser.Id,
+                email = newUser.Email,
+                message = "Registration successful. Welcome to our eCommerce platform!"
+
+            });
+            
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginUserDto user)
@@ -47,13 +53,12 @@ namespace Market.Controllers
             {
                 return BadRequest();
             }
-            if (await _authRepository.Login(user))
-            {
-                var tokenString = _authRepository.GenerateToken(user);
-                return Ok(tokenString);
-            }
-            return Unauthorized("Wrong email or password!");
+            var result = await _authService.Login(user);
 
+            
+            return result.Token != null
+             ? Ok(result.Token) 
+             : Unauthorized(result.ErrorMessage);
         }
     }
 }

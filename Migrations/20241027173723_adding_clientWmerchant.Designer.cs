@@ -4,6 +4,7 @@ using Market.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Market.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241027173723_adding_clientWmerchant")]
+    partial class adding_clientWmerchant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,8 +39,9 @@ namespace Market.Migrations
                     b.Property<int>("TotalShippingCost")
                         .HasColumnType("int");
 
-                    b.Property<int>("clientId")
-                        .HasColumnType("int");
+                    b.Property<string>("clientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CartId");
 
@@ -87,25 +91,6 @@ namespace Market.Migrations
                     b.ToTable("CartItems");
                 });
 
-            modelBuilder.Entity("Market.Model.Merchant", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("userId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("Merchants");
-                });
-
             modelBuilder.Entity("Market.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -146,9 +131,6 @@ namespace Market.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MerchantId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -160,8 +142,6 @@ namespace Market.Migrations
                         .HasColumnType("decimal(5,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MerchantId");
 
                     b.ToTable("Stores");
 
@@ -393,32 +373,9 @@ namespace Market.Migrations
 
             modelBuilder.Entity("Model.Client.Client", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("userId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("Clients");
-                });
-
-            modelBuilder.Entity("Market.Model.User", b =>
-                {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("User");
+                    b.HasDiscriminator().HasValue("Client");
                 });
 
             modelBuilder.Entity("Market.Model.Cart", b =>
@@ -451,17 +408,6 @@ namespace Market.Migrations
                     b.Navigation("product");
                 });
 
-            modelBuilder.Entity("Market.Model.Merchant", b =>
-                {
-                    b.HasOne("Market.Model.User", "user")
-                        .WithMany()
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("user");
-                });
-
             modelBuilder.Entity("Market.Models.Product", b =>
                 {
                     b.HasOne("Market.Models.Store", "store")
@@ -471,13 +417,6 @@ namespace Market.Migrations
                         .IsRequired();
 
                     b.Navigation("store");
-                });
-
-            modelBuilder.Entity("Market.Models.Store", b =>
-                {
-                    b.HasOne("Market.Model.Merchant", null)
-                        .WithMany("Stores")
-                        .HasForeignKey("MerchantId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -531,25 +470,9 @@ namespace Market.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Model.Client.Client", b =>
-                {
-                    b.HasOne("Market.Model.User", "user")
-                        .WithMany()
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("user");
-                });
-
             modelBuilder.Entity("Market.Model.Cart", b =>
                 {
                     b.Navigation("CartItems");
-                });
-
-            modelBuilder.Entity("Market.Model.Merchant", b =>
-                {
-                    b.Navigation("Stores");
                 });
 
             modelBuilder.Entity("Market.Models.Store", b =>

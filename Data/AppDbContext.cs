@@ -2,6 +2,7 @@ using Market.Model;
 using Market.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Model.Client;
 
 namespace Market.Data
 {
@@ -64,13 +65,10 @@ namespace Market.Data
             modelBuilder.Entity<Cart>()
                         .Property(c => c.TotalAmount)
                         .HasColumnType("decimal(18,2)");
-            //modelBuilder.Entity<Cart>()
-            //  .HasOne(c => c.User)
-            //  .WithOne() // Use WithOne() for one-to-one relationship
-            //  .HasForeignKey<Cart>(c => c.UserId);
+        
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Store>().HasData(
+            /*modelBuilder.Entity<Store>().HasData(
                 new Store
                 {
                     Id = 1,
@@ -88,13 +86,15 @@ namespace Market.Data
                     VATPercent = 0.25m,
                     ShippingCost = 10
                 }
-                );
+                );*/
         }
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Store> Stores { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Cart> Carts { get; set; }
+        public DbSet<Merchant> Merchants { get; set; }
+        public DbSet<Client> Clients { get; set; }
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Market.Data;
 using Market.Model;
 using Market.Services.Repository.IRepository;
+using Market.Services.Repository.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
@@ -17,6 +18,10 @@ namespace Market.Services.Repository
         public ICartItemRepository CartItems { get; private set; }
 
         public ICartRepository Carts { get; private set; }
+
+        public IMerchantRepository Merchants { get; private set; }
+        public IClientRepository Clients { get; private set; }
+
          
         public UnitOfWork(AppDbContext context)
         {
@@ -29,6 +34,11 @@ namespace Market.Services.Repository
             CartItems = new CartItemRepository(_context);
 
             Carts = new CartRepository(_context);
+
+            Merchants = new MerchantRepository(_context);
+
+            Clients = new ClientRepository(_context);
+
 
         }
 
