@@ -146,9 +146,6 @@ namespace Market.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MerchantId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -159,29 +156,14 @@ namespace Market.Migrations
                     b.Property<decimal>("VATPercent")
                         .HasColumnType("decimal(5,2)");
 
+                    b.Property<int>("merchantId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("MerchantId");
+                    b.HasIndex("merchantId");
 
                     b.ToTable("Stores");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "12 Park Street",
-                            Name = "Store 1",
-                            ShippingCost = 20,
-                            VATPercent = 0.15m
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Address = "21 Park Street",
-                            Name = "Store 12",
-                            ShippingCost = 10,
-                            VATPercent = 0.25m
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -443,7 +425,7 @@ namespace Market.Migrations
                     b.HasOne("Market.Models.Product", "product")
                         .WithMany()
                         .HasForeignKey("productId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("cart");
@@ -475,9 +457,13 @@ namespace Market.Migrations
 
             modelBuilder.Entity("Market.Models.Store", b =>
                 {
-                    b.HasOne("Market.Model.Merchant", null)
+                    b.HasOne("Market.Model.Merchant", "Merchant")
                         .WithMany("Stores")
-                        .HasForeignKey("MerchantId");
+                        .HasForeignKey("merchantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Merchant");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

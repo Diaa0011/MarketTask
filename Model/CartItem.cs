@@ -20,7 +20,8 @@ namespace Market.Model
         public decimal TotalPrice { get; set; }
 
         public int ShippingCost { get; set; }
-
+        [ForeignKey("productId")]
+        public int productId { get; set; }
         public Product product { get; set; }
 
         public Cart cart { get; set; }

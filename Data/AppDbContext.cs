@@ -15,6 +15,10 @@ namespace Market.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Store>()
+                        .HasOne(s => s.Merchant)
+                        .WithMany(m => m.Stores)
+                        .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Store>()
                         .HasMany(s => s.Products)
                         .WithOne(p => p.store);
             modelBuilder.Entity<Store>(entity =>
@@ -33,6 +37,7 @@ namespace Market.Data
                         .HasOne(p => p.store)
                         .WithMany(s => s.Products)
                         .IsRequired();
+
 
             modelBuilder.Entity<CartItem>(entity =>
             {
@@ -54,6 +59,11 @@ namespace Market.Data
 
             modelBuilder.Entity<CartItem>()
                 .HasOne(ci => ci.product);
+           modelBuilder.Entity<CartItem>()
+                        .HasOne(ci => ci.product)
+                        .WithMany()
+                        .HasForeignKey(ci => ci.productId)
+                        .OnDelete(DeleteBehavior.NoAction);
 
 
             modelBuilder.Entity<Cart>()
