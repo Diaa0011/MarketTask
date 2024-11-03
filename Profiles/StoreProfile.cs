@@ -12,7 +12,10 @@ namespace Market
             CreateMap<Store, StoreReadDto>()
             .ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products));
             CreateMap<StoreCreateDto, Store>();
+            CreateMap<StoreCreateDto, StoreReadDto>();
+
             CreateMap<StoreEditDto, Store>();
+            CreateMap<Store, StoreEditDto>();
         }
     }
 }

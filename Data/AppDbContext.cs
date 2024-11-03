@@ -14,10 +14,13 @@ namespace Market.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Store>()
-                        .HasOne(s => s.Merchant)
-                        .WithMany(m => m.Stores)
-                        .OnDelete(DeleteBehavior.NoAction);
+            /*modelBuilder.Entity<User>()
+                        .ToTable("AspNetUsers")
+                        .HasDiscriminator<string>("UserType")
+                        // .HasValue<User>("User")
+                        .HasValue<Merchant>("merchant")
+                        .HasValue<Client>("client");*/
+           
             modelBuilder.Entity<Store>()
                         .HasMany(s => s.Products)
                         .WithOne(p => p.store);

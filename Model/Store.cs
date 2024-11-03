@@ -12,7 +12,7 @@ namespace Market.Models
         public string Address { get; set; }
         public decimal VATPercent { get; set; }
         public int ShippingCost { get; set; }
-        public int merchantId { get; set; }
+        public string MerchantId { get; set; }
         public Merchant Merchant { get; set; }  
         public List<Product> Products { get; set; } = new List<Product>();
     }

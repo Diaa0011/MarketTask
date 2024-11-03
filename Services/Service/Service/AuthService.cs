@@ -16,7 +16,7 @@ namespace Market.Services.Service
     public class AuthService : IAuthService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        //private readonly IMapper _mapper;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _config;
@@ -28,7 +28,7 @@ namespace Market.Services.Service
             IConfiguration config)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
+           // _mapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
             _config = config;
@@ -36,38 +36,51 @@ namespace Market.Services.Service
 
         public async Task<IdentityUser> Register(UserDto user)
         {
-            //var userToCreate = _mapper.Map<IdentityUser>(user);
-            var userToCreate = new User
+            if (user.role == "merchant")
             {
-                UserName = user.email,
-                Email = user.email,
-                Role = user.role 
-            };
-            var result = await _userManager.CreateAsync(userToCreate, user.password);
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(userToCreate, user.role);
-                if(user.role == "Merchant")
+                var merchantToCreate = new Merchant
                 {
-                    var merchant = new Merchant
-                    {
-                        user = userToCreate
-                    };
-                    _unitOfWork.Merchants.Add(merchant);
-                    await _unitOfWork.SaveAsync();
-                }else{
-                    var client = new Client
-                    {
-                        user = userToCreate
-                    };
-                    _unitOfWork.Clients.Add(client);
-                    await _unitOfWork.SaveAsync();
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    UserName = user.email,
+                    Email = user.email,
+                    Role = user.role // This might need to be adjusted if Role is handled differently
+                };
+
+                var result = await _userManager.CreateAsync(merchantToCreate, user.password);
+                
+                if (result.Succeeded)
+                {
+                    // The role assignment may be redundant since you're already creating a Merchant instance
+                    await _userManager.AddToRoleAsync(merchantToCreate, "merchant");
+
+                    Console.WriteLine($"id {merchantToCreate.Id}, email {merchantToCreate.Email} and he is a {merchantToCreate.Role}");
+                    return merchantToCreate;
                 }
-                Console.WriteLine($"id {userToCreate.Id}, email {userToCreate.Email} and he is a {userToCreate.Role}");
-                return userToCreate;
-            }else{
-                return null;
             }
+            else
+            {
+                var clientToCreate = new Client
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    UserName = user.email,
+                    Email = user.email,
+                    Role = user.role // Adjust if necessary
+                };
+
+                var result = await _userManager.CreateAsync(clientToCreate, user.password);
+                
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(clientToCreate, "client");
+
+                    Console.WriteLine($"id {clientToCreate.Id}, email {clientToCreate.Email} and he is a {clientToCreate.Role}");
+                    return clientToCreate;
+                }
+
+            }
+             return null;
         }
 
         public async Task<(string? Token,string? ErrorMessage)> Login(LoginUserDto user)
@@ -91,7 +104,7 @@ namespace Market.Services.Service
         {
             var user = _userManager.FindByEmailAsync(userDto.Email).GetAwaiter().GetResult();
             var roles = _userManager.GetRolesAsync(user).GetAwaiter().GetResult();
-
+            //var role = _userManager.GetRoleAsync(user);
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier , user.Id),

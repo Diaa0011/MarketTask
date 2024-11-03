@@ -2,12 +2,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Market.Dtos.Store
 {
+    //records better for DTOs which has chanageable data such as edit/upate
     public class StoreEditDto
     {
-        [Required]
         public string Name { get; set; }
-        [Required]
-        public string Description { get; set; }       
+        public string Address { get; set; }
+        public decimal VATPercent { get; set; }
+        public int ShippingCost { get; set; }     
         
     }
 }

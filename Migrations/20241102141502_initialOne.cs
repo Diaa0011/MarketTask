@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Market.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class initialOne : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,6 +31,8 @@ namespace Market.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -159,44 +161,6 @@ namespace Market.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Clients",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    userId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clients", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Clients_AspNetUsers_userId",
-                        column: x => x.userId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Merchants",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    userId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Merchants", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Merchants_AspNetUsers_userId",
-                        column: x => x.userId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Carts",
                 columns: table => new
                 {
@@ -204,17 +168,16 @@ namespace Market.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TotalShippingCost = table.Column<int>(type: "int", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    clientId = table.Column<int>(type: "int", nullable: false)
+                    clientId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Carts", x => x.CartId);
                     table.ForeignKey(
-                        name: "FK_Carts_Clients_clientId",
+                        name: "FK_Carts_AspNetUsers_clientId",
                         column: x => x.clientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -227,16 +190,17 @@ namespace Market.Migrations
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     VATPercent = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
                     ShippingCost = table.Column<int>(type: "int", nullable: false),
-                    merchantId = table.Column<int>(type: "int", nullable: false)
+                    MerchantId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Stores", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Stores_Merchants_merchantId",
-                        column: x => x.merchantId,
-                        principalTable: "Merchants",
-                        principalColumn: "Id");
+                        name: "FK_Stores_AspNetUsers_MerchantId",
+                        column: x => x.MerchantId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -347,24 +311,14 @@ namespace Market.Migrations
                 column: "clientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Clients_userId",
-                table: "Clients",
-                column: "userId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Merchants_userId",
-                table: "Merchants",
-                column: "userId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Products_storeId",
                 table: "Products",
                 column: "storeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Stores_merchantId",
+                name: "IX_Stores_MerchantId",
                 table: "Stores",
-                column: "merchantId");
+                column: "MerchantId");
         }
 
         /// <inheritdoc />
@@ -398,13 +352,7 @@ namespace Market.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Clients");
-
-            migrationBuilder.DropTable(
                 name: "Stores");
-
-            migrationBuilder.DropTable(
-                name: "Merchants");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

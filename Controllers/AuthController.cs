@@ -35,7 +35,7 @@ namespace Market.Controllers
             {
                 return BadRequest("fix your data first!");
             }
-
+            
             var newUser = await _authService.Register(user);
 
             return CreatedAtAction(nameof(RegisterUser), new {

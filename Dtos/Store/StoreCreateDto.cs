@@ -14,6 +14,5 @@ namespace Market.Dtos.Store
         public decimal VATPercent { get; set; }
 
 
-
     }
 }

@@ -1,10 +1,16 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
+using Market.Data;
 using Market.Dtos.Store;
+using Market.Model;
 using Market.Models;
 using Market.Services.Repository.IRepository;
+using Market.Services.Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Market.Controllers
 {
@@ -15,29 +21,65 @@ namespace Market.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public StoreController(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly AppDbContext _context;
+        private readonly IStoreService _storeService;
+        public StoreController(IUnitOfWork unitOfWork,
+         IMapper mapper,
+         IStoreService storeService,
+        AppDbContext context
+         )
         {
             _unitOfWork = unitOfWork ??
                 throw new ArgumentNullException(nameof(unitOfWork));
             _mapper = mapper ??
                 throw new ArgumentNullException(nameof(mapper));
+            _context = context ??
+                throw new ArgumentNullException(nameof(context));
+            _storeService = storeService ??
+                throw new ArgumentNullException(nameof(storeService));
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllStores()
         {
-            var stores_fetch = await _unitOfWork.Stores.GetAllStoresWithProductsAsync();
+            var user_Id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var stores = _mapper.Map<IEnumerable<StoreReadDto>>(stores_fetch);
+            if (user_Id == null)
+            {
+                return Unauthorized("User not authenticated.");
+            }
 
-           return Ok(stores);
+            var stores_fetch = await _storeService.GetAllStoresForMerchant(user_Id);
+
+           return Ok(stores_fetch);
         }
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         public async Task<IActionResult> GetStoreById(int id)
         {
-            var store_fetch = await _unitOfWork.Stores.GetStoreByIdWithProductsAsync(id);
-            
-            var store = _mapper.Map<StoreReadDto>(store_fetch);
+
+            var user_Id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (user_Id == null)
+            {
+                return Unauthorized("User not authenticated.");
+            }
+
+            var store = await _storeService.GetStoreByIdWithProductsAsync(id, user_Id);
+
+            return Ok(store);
+        }
+        [HttpGet("name/{name}")]
+        public async Task<IActionResult> GetStoreByName(string name)
+        {
+
+            var user_Id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (user_Id == null)
+            {
+                return Unauthorized("User not authenticated.");
+            }
+
+            var store = await _storeService.FindByNameAsync(name, user_Id);
 
             return Ok(store);
         }
@@ -45,25 +87,38 @@ namespace Market.Controllers
         [HttpPost]
         public async Task<IActionResult> createStore(StoreCreateDto store)
         {
-            if(store is null)
+            if (store is null)
             {
-                return NoContent();
+                return BadRequest("Store information is required.");
             }
 
-            var newStore = _mapper.Map<Store>(store);
-            
-            await _unitOfWork.Stores.AddAsync(newStore);
-            
-            _unitOfWork.Save();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var s = _unitOfWork.Stores.FindByNameAsync(newStore.Name);
-            return CreatedAtAction(nameof(GetStoreById), new { id = s.Id }, newStore);
+            if (userId == null)
+            {
+                return Unauthorized("User not authenticated.");
+            }
+
+            var newStore = await _storeService.CreateStoreAsync(store, userId);
+
+            if (newStore == null)
+            {
+                return Problem("Failed to retrieve created store.");
+            }
+
+            return CreatedAtAction(nameof(GetStoreById),
+             new { id = newStore.Id },newStore);
         }
 
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateStore(int id,StoreEditDto storeFix)
+        [HttpPatch("id/{id}")]
+        public async Task<IActionResult> UpdateStore(int id, JsonPatchDocument<StoreEditDto> patchDoc)
         {
-            var store = await _unitOfWork.Stores.GetByIdAsync(id);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (userId == null)
+            {
+                return Unauthorized("User not authenticated.");
+            }
+            var store = await _storeService.UpdateStoreAsync(id,patchDoc, userId);
 
             if (store is null)
             {
@@ -71,38 +126,25 @@ namespace Market.Controllers
                 return NotFound();
             }
 
-
-            _mapper.Map(storeFix, store);
-
-            _unitOfWork.Save();
-            Console.WriteLine("---> Deleted Successfully");
+            Console.WriteLine("---> Store Edited Successfully");
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("id/{id}")]
         public async Task<IActionResult> DeleteStore(int id)
         {
-            var StoreDeleteDto = await _unitOfWork.Stores.GetByIdAsync(id);
-
-            if (StoreDeleteDto is null)
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (userId == null)
+            {
+                return Unauthorized("User not authenticated.");
+            }
+            var storeDeletion = _storeService.DeleteStoreAsync(id, userId);
+            if (!storeDeletion.Result)
             {
                 Console.WriteLine("No Stores Found");
                 return NotFound();
             }
-            var storeDeletion = _mapper.Map<Store>(StoreDeleteDto);
-
-            var productsToDelete = await _unitOfWork.Products.FindAllAsync(c => c.store == storeDeletion);
-
-            foreach(Product prodcut in productsToDelete)
-            {
-                _unitOfWork.Products.Delete(prodcut);
-                _unitOfWork.Save();
-            }
-
-            _unitOfWork.Stores.Delete(storeDeletion);
-
-            _unitOfWork.Save();
-
+    
             Console.WriteLine("---> Deleted Successfully");
             return NoContent();
         }
