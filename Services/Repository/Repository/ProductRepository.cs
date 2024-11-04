@@ -25,5 +25,6 @@ namespace Market.Services.Repository
             return await _db.Products.Include(p => p.store.Id).FirstOrDefaultAsync(p => p.Name == name);
         }
 
+
     }
 }

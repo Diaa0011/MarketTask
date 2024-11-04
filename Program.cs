@@ -15,6 +15,8 @@ using Swashbuckle.AspNetCore.Filters;
 using Market.Services.Service;
 using Market.Services.Repository.Repository;
 using Market.Services.Service.IService;
+using Services.Service.IService;
+using Market.Services.Service.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,7 @@ builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
 builder.Services.AddScoped<IMerchantRepository, MerchantRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>(); 
 builder.Services.AddScoped<IStoreService, StoreService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddControllersWithViews()
             .AddJsonOptions(options =>
