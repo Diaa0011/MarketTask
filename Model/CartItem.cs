@@ -1,4 +1,4 @@
-﻿using Market.Models;
+﻿using Market.Model;
 using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

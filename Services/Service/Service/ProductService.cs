@@ -2,8 +2,9 @@ using System.Security.Claims;
 using AutoMapper;
 using Market.Dtos.Product;
 using Market.Model;
-using Market.Models;
 using Market.Services.Repository.IRepository;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using Services.Service.IService;
 
 namespace Market.Services.Service.Service
@@ -25,6 +26,24 @@ namespace Market.Services.Service.Service
             //userId = httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             
         }
+
+        public async Task<IEnumerable<ProductWithStoreReadDto>> GetAllProducts()
+        {
+            var products = await _unitOfWork.Products.GetAllProductsAsync();
+            
+            var Readedproducts =  _mapper.Map<IEnumerable<ProductWithStoreReadDto>>(products);
+            
+            return Readedproducts;
+        }
+
+        public async Task<ProductWithStoreReadDto> GetProductById(int productId)
+        {
+            var product = await _unitOfWork.Products.GetProductByIdAsync(productId);
+            
+            var Readedproduct =  _mapper.Map<ProductWithStoreReadDto>(product);
+            
+            return Readedproduct;
+        }
         
         public async Task<ProductReadDto> CreateProduct(ProductCreateDto productDto)
         {
@@ -41,14 +60,37 @@ namespace Market.Services.Service.Service
             }
 
             var product = _mapper.Map<Product>(productDto);
-            //product.storeId = store.Id;
             await _unitOfWork.Products.AddAsync(product);
             await _unitOfWork.SaveAsync();
             var productRead = _mapper.Map<ProductReadDto>(product);
 
             return productRead;
         }
-/*
+        
+
+        public async Task<ProductReadDto> UpdateProduct(int id,[FromBody]JsonPatchDocument<ProductEditDto> patchDoc)
+        {   
+            // var store = _unitOfWork.Stores.GetById(productDto.StoreId);
+            var product = await _unitOfWork.Products.GetProductByIdAsync(id);
+
+            if (product is null)
+            {
+                return null;
+            }
+
+            var productToPatch = _mapper.Map<ProductEditDto>(product);
+
+            patchDoc.ApplyTo(productToPatch);
+
+            _mapper.Map(productToPatch, product);
+
+            await _unitOfWork.SaveAsync();
+
+            var productRead = _mapper.Map<ProductReadDto>(product);
+
+            return productRead;
+        }
+
         public async Task<bool> DeleteProduct(int productId)
         {
             var product = await _unitOfWork.Products.GetProductByIdAsync(productId);
@@ -58,39 +100,13 @@ namespace Market.Services.Service.Service
                 return false;
             }
 
-            _unitOfWork.Products.DeleteProduct(product);
+            _unitOfWork.Products.Delete(product);
+            
             await _unitOfWork.SaveAsync();
 
             return true;
         }
 
-        public async Task<IEnumerable<ProductReadDto>> GetAllProducts()
-        {
-            var products = await _unitOfWork.Products.GetAllProductsAsync();
-
-            return _mapper.Map<IEnumerable<ProductReadDto>>(products);
-        }
-
-        public async Task<ProductReadDto> GetProductById(int productId)
-        {
-            var product = await _unitOfWork.Products.GetProductByIdAsync(productId);
-
-            return _mapper.Map<ProductReadDto>(product);
-        }
-
-        public async Task<ProductReadDto> UpdateProduct(ProductEditDto productDto)
-        {
-            var product = await _unitOfWork.Products.GetProductByIdAsync(productDto.Id);
-
-            if (product is null)
-            {
-                return null;
-            }
-
-            _mapper.Map(productDto, product);
-            await _unitOfWork.SaveAsync();
-
-            return _mapper.Map<ProductReadDto>(product);
-        }*/
+        
     }
 }

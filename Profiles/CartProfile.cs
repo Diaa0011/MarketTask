@@ -1,7 +1,6 @@
 using AutoMapper;
 using Market.Dtos.Cart;
 using Market.Model;
-using Market.Models;
 
 namespace Market
 {

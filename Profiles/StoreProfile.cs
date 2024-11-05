@@ -1,6 +1,6 @@
 using Market.Dtos.Product;
 using Market.Dtos.Store;
-using Market.Models;
+using Market.Model;
 using AutoMapper;
 namespace Market
 {

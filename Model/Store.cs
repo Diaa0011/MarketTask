@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using Market.Model;
 
-namespace Market.Models
+namespace Market.Model
 {
     public class Store
     {

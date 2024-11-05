@@ -3,7 +3,6 @@ using Market.Dtos.Cart;
 using Market.Dtos.CartItemDto;
 using Market.Dtos.Product;
 using Market.Model;
-using Market.Models;
 using Market.Services.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

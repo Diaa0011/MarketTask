@@ -3,7 +3,6 @@ using AutoMapper;
 using Market.Data;
 using Market.Dtos.Store;
 using Market.Model;
-using Market.Models;
 using Market.Services.Repository.IRepository;
 using Market.Services.Service.IService;
 using Microsoft.AspNetCore.Authorization;
@@ -111,7 +110,7 @@ namespace Market.Controllers
         }
 
         [HttpPatch("id/{id}")]
-        public async Task<IActionResult> UpdateStore(int id, JsonPatchDocument<StoreEditDto> patchDoc)
+        public async Task<IActionResult> updateStore(int id, JsonPatchDocument<StoreEditDto> patchDoc)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (userId == null)
@@ -145,7 +144,7 @@ namespace Market.Controllers
                 return NotFound();
             }
     
-            Console.WriteLine("---> Deleted Successfully");
+            Console.WriteLine("--->Store Deleted Successfully [Controller Check]");
             return NoContent();
         }
 

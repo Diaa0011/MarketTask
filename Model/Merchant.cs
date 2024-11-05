@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Market.Models;
+using Market.Model;
 using Market.Services.Service;
 using Microsoft.AspNetCore.Identity;
 

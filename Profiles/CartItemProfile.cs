@@ -2,7 +2,6 @@
 using Market.Dtos.Cart;
 using Market.Dtos.CartItemDto;
 using Market.Model;
-using Market.Models;
 
 namespace Market.Profiles
 {

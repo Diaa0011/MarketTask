@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Market.Data;
 using Market.Dtos.Store;
-using Market.Models;
+using Market.Model;
 using Market.Services.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 

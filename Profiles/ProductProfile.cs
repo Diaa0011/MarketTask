@@ -1,6 +1,6 @@
 using AutoMapper;
 using Market.Dtos.Product;
-using Market.Models;
+using Market.Model;
 
 namespace Market
 {
@@ -13,7 +13,7 @@ namespace Market
             CreateMap<ProductCreateDto, Product>();
             CreateMap<Product, ProductEditDto>();
             CreateMap<ProductEditDto, Product>();
-            CreateMap<ProductEditDto, Product>();
+            CreateMap<Product,ProductWithStoreReadDto>();
             CreateMap<ProductToCartDto, Product>();
         }
     }

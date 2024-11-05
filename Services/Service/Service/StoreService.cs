@@ -2,7 +2,6 @@ using System.Security.Claims;
 using AutoMapper;
 using Market.Dtos.Store;
 using Market.Model;
-using Market.Models;
 using Market.Services.Repository.IRepository;
 using Market.Services.Service.IService;
 using Microsoft.AspNetCore.JsonPatch;
@@ -106,6 +105,14 @@ namespace Market.Services.Service
             {
                 throw new Exception("Store not found.");
             }
+            foreach (var product in store.Products)
+            {
+                _unitOfWork.Products.Delete(product);
+            }
+
+            Console.WriteLine("--> Products deleted successfully.  [Service Check]");
+
+            Console.WriteLine("--> Store deleted successfully. [Service Check]");
 
             _unitOfWork.Stores.Delete(store);
             

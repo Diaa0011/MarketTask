@@ -1,5 +1,4 @@
 using Market.Dtos.Store;
-using Market.Models;
 using Microsoft.AspNetCore.JsonPatch;
 
 namespace Market.Services.Service.IService

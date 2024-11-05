@@ -1,5 +1,5 @@
 ﻿using Market.Data;
-using Market.Models;
+using Market.Model;
 using Market.Services.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,4 +1,4 @@
-﻿using Market.Models;
+﻿using Market.Model;
 
 namespace Market.Services.Repository.IRepository
 {
