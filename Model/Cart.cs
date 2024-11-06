@@ -10,9 +10,10 @@ namespace Market.Model
     {
         [Key]
         public int CartId { get; set; }
-        public IEnumerable<CartItem> CartItems{get;set;}
         public int TotalShippingCost { get; set; }
         public decimal TotalAmount { get; set; }
+        public IEnumerable<CartItem> CartItems{get;set;}
+        public string ClientId { get; set; }
         public Client client { get; set; }
     }
 }

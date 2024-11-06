@@ -9,9 +9,5 @@ namespace Market.Model
         public string FullName { get { return FirstName + " " + LastName; } }
         public string Role { get; set; }
 
-        internal static object FindFirst(object nameIdentifier)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

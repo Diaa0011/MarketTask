@@ -13,12 +13,7 @@ namespace Market.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            /*modelBuilder.Entity<User>()
-                        .ToTable("AspNetUsers")
-                        .HasDiscriminator<string>("UserType")
-                        // .HasValue<User>("User")
-                        .HasValue<Merchant>("merchant")
-                        .HasValue<Client>("client");*/
+        
            
             modelBuilder.Entity<Store>()
                         .HasMany(s => s.Products)
@@ -51,25 +46,29 @@ namespace Market.Data
                 entity.Property(e => e.TotalPrice)
                     .HasColumnType("decimal(18,2)");
             });
-            modelBuilder.Entity<CartItem>()
-                .HasKey(ci => ci.CartItemId);
+            /*modelBuilder.Entity<CartItem>()
+                .HasKey(ci => ci.CartItemId);*/
 
             modelBuilder.Entity<CartItem>()
                 .HasOne(ci => ci.cart)
-                .WithMany(c => c.CartItems);
+                .WithMany(c => c.CartItems)
+                .IsRequired();
 
 
             modelBuilder.Entity<CartItem>()
                 .HasOne(ci => ci.product);
+                
            modelBuilder.Entity<CartItem>()
                         .HasOne(ci => ci.product)
                         .WithMany()
                         .HasForeignKey(ci => ci.productId)
                         .OnDelete(DeleteBehavior.NoAction);
 
-
             modelBuilder.Entity<Cart>()
-                .HasKey(c => c.CartId);
+                        .HasOne(c => c.client)
+                        .WithOne(c => c.cart)
+                        .HasForeignKey<Cart>(c => c.ClientId)  // Specify ClientId as the foreign key
+                        .IsRequired();
 
             modelBuilder.Entity<Cart>()
                         .HasMany(c => c.CartItems)
