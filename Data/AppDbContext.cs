@@ -60,8 +60,8 @@ namespace Market.Data
                 
            modelBuilder.Entity<CartItem>()
                         .HasOne(ci => ci.product)
-                        .WithMany()
-                        .HasForeignKey(ci => ci.productId)
+                        .WithMany()`
+                        .HasForeignKey(ci => ci.ProductId)
                         .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Cart>()

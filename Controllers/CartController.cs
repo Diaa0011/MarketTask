@@ -27,6 +27,11 @@ namespace Market.Controllers
 
         }
 
+
+
+
+        
+        /*
         [HttpPost]
         public async Task<IActionResult> CreateCart(CartCreateDto newCart)
         {
@@ -137,6 +142,6 @@ namespace Market.Controllers
             }
             return TotalAmount;
         }
-
+        */
     }
 }

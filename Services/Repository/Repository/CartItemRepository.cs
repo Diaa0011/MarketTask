@@ -20,13 +20,5 @@ namespace Market.Services.Repository
                                  .Include(ci => ci.cart)
                                  .ToListAsync();
         }
-        public async Task SetIdentityInsertAsync(string tableName, bool enable)
-        {
-            var identityInsertCommand = enable ?
-                $"SET IDENTITY_INSERT {tableName} ON" :
-                $"SET IDENTITY_INSERT {tableName} OFF";
-
-            await _db.Database.ExecuteSqlRawAsync(identityInsertCommand);
-        }
     }
 }

@@ -9,7 +9,6 @@ namespace Market.Model
     {
         [Key]
         public int CartItemId {  get; set; }
-        public int CartItemIdHelper { get; set; }
 
         public int Quantity { get; set; }
 
@@ -20,10 +19,9 @@ namespace Market.Model
         public decimal TotalPrice { get; set; }
 
         public int ShippingCost { get; set; }
-        [ForeignKey("productId")]
-        public int productId { get; set; }
+        public int ProductId { get; set; }
         public Product product { get; set; }
-
+        public int CartId { get; set; }
         public Cart cart { get; set; }
 
     }
