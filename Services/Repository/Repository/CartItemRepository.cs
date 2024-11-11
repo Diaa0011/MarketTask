@@ -16,7 +16,7 @@ namespace Market.Services.Repository
         public async Task<IEnumerable<CartItem>> GetAllCartItemsAsync()
         {
             return await _db.CartItems
-                                 .Include(ci => ci.product)
+                                 .Include(ci => ci.Product)
                                  .Include(ci => ci.cart)
                                  .ToListAsync();
         }

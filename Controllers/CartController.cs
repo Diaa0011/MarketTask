@@ -1,35 +1,78 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Market.Dtos.Cart;
 using Market.Dtos.CartItemDto;
 using Market.Dtos.Product;
 using Market.Model;
 using Market.Services.Repository.IRepository;
+using Market.Services.Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Services.Service.IService;
 
 namespace Market.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles ="user")]
+    [Authorize(Roles ="client")]
     public class CartController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICartItemService _cartItemService;
+        private readonly ICartService _cartService;
 
-        public CartController(IUnitOfWork unitOfWork, IMapper mapper)
+        public CartController(IUnitOfWork unitOfWork, IMapper mapper,
+        ICartItemService cartItemService,
+        ICartService cartService)
         {
-            _unitOfWork = unitOfWork ??
+           /*_unitOfWork = unitOfWork ??
                 throw new ArgumentNullException(nameof(unitOfWork));
             _mapper = mapper ??
-                throw new ArgumentNullException(nameof(mapper));
+                throw new ArgumentNullException(nameof(mapper));*/
 
+            _cartItemService = cartItemService ??
+                throw new ArgumentNullException(nameof(cartItemService));
+            _cartService = cartService ??
+                throw new ArgumentNullException(nameof(cartService));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddItemToCart(CartItemCreateDto cartItemCreateDto)
+        {
+            //var cartItem = _mapper.Map<CartItem>(cartItemCreateDto);
 
+            //var cart = await _unitOfWork.Carts.GetCartByClientIdAsync(cartItemCreateDto.ClientId);
+            string clientId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            
+            var cartItem = cartItemCreateDto;
 
+            var result = await _cartItemService.AddToCart(clientId, cartItem);
 
+            if (result)
+            {
+                return Ok("Item added to cart successfully");
+            }else
+            {
+                return BadRequest("Failed to add item to cart");
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetCart()
+        {
+            string clientId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var cart = await _cartService.GetCart(clientId);
+
+            if (cart == null)
+            {
+                return NotFound("Cart not found");
+            }
+
+            return Ok(cart);
+        }
         
         /*
         [HttpPost]
@@ -58,14 +101,7 @@ namespace Market.Controllers
         }
 
 
-        [HttpGet("{cartId}")]
-        public async Task<IActionResult> GetCartById(int cartId)
-        {
-            var cart = await _unitOfWork.Carts.GetByIdAsync(cartId);
-
-            var cartShow = _mapper.Map<CartReadDto>(cart);
-            return Ok(cartShow);
-        }
+        
         [HttpGet("items")]
         public async Task<IActionResult> GetAllCartItems()
         {

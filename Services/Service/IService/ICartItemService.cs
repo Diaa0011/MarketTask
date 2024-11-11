@@ -1,8 +1,11 @@
+using Market.Dtos.CartItemDto;
+
 namespace Services.Service.IService
 {
-    public interface ICartService
+    public interface ICartItemService
     {
-        Task<bool> AddToCart();
+        Task<bool> AddToCart(string clientId,CartItemCreateDto cartItemCreateDto);
+        Task<bool> RemoveFromCart();
         /*
         Task<bool> AddToCart(CartRequestDTO cartRequest);
         Task<bool> RemoveFromCart(int cartId);

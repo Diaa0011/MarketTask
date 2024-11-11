@@ -7,7 +7,8 @@ namespace Market.Services.Repository.IRepository
     {
         //Task AddProductToCartAsync(int cartId, ProductToCartDto productToCartDto);
         Task<IEnumerable<Cart>> GetAllCartsAsync();
-        Task<Cart> GetCartByIdAsync(int cartId);
+        Task<Cart> GetCartAsync(int cartId);
+        Task<Cart> GetCartByClientIdAsync(string clientId);
         Task UpdateCartAsync(Cart cart);
         public bool HasCartItems(int cartId);
 

@@ -42,7 +42,7 @@ namespace Market.Services.Repository
                 foreach (var incluse in includes)
                     query = query.Include(incluse);
 
-            return query.SingleOrDefault(criteria);
+            return query.FirstOrDefault(criteria);
         }
 
         public async Task<T> FindAsync(Expression<Func<T, bool>> criteria, string[] includes = null)

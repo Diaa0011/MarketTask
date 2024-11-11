@@ -56,11 +56,11 @@ namespace Market.Data
 
 
             modelBuilder.Entity<CartItem>()
-                .HasOne(ci => ci.product);
+                .HasOne(ci => ci.Product);
                 
            modelBuilder.Entity<CartItem>()
-                        .HasOne(ci => ci.product)
-                        .WithMany()`
+                        .HasOne(ci => ci.Product)
+                        .WithMany()
                         .HasForeignKey(ci => ci.ProductId)
                         .OnDelete(DeleteBehavior.NoAction);
 

@@ -13,6 +13,7 @@ namespace Market.Services.Repository
         {
             _db = db;
         }
+
         public async Task<IEnumerable<Cart>> GetAllCartsAsync()
         {
             return await _db.Carts
@@ -20,12 +21,18 @@ namespace Market.Services.Repository
                 .ToListAsync();
         }
 
-        public async Task<Cart> GetCartByIdAsync(int cartId)
+        public async Task<Cart> GetCartAsync(int cartId)
         {
             return await _db.Carts.Include(c => c.CartItems)
                                   .FirstOrDefaultAsync(c => c.CartId == cartId);
+                                  
         }
 
+        public async Task<Cart> GetCartByClientIdAsync(string clientId)
+        {
+            return await _db.Carts.Include(c => c.CartItems)
+                                  .FirstOrDefaultAsync(c => c.ClientId == clientId);
+        }
         public async Task UpdateCartAsync(Cart cart)
         {
             _db.Carts.Update(cart);

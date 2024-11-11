@@ -12,7 +12,8 @@ namespace Market.Model
         public int CartId { get; set; }
         public int TotalShippingCost { get; set; }
         public decimal TotalAmount { get; set; }
-        public IEnumerable<CartItem> CartItems{get;set;}
+        public DateTime CreatedAt { get; set; }
+        public List<CartItem> CartItems{get;set;} = new List<CartItem>();
         public string ClientId { get; set; }
         public Client client { get; set; }
     }
