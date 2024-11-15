@@ -101,8 +101,9 @@ namespace Market.Services.Repository
             if (includes != null)
                 foreach (var include in includes)
                     query = query.Include(include);
+            var result = await query.Where(criteria).ToListAsync();
 
-            return await query.Where(criteria).ToListAsync();
+            return result;
         }
 
         public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> criteria, int take, int skip)

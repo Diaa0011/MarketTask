@@ -33,7 +33,7 @@ namespace Market.Controllers
             _productService = productService ??
                 throw new ArgumentNullException(nameof(productService));
         }
-        [HttpGet,Authorize(Roles ="merchant")]
+        [HttpGet]
         public async Task<IActionResult> GetAllProducts()
         {
             //var products = await _unitOfWork.Products.GetAllProductsAsync();

@@ -19,12 +19,10 @@ namespace Market.Controllers
     [Authorize(Roles ="client")]
     public class CartController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
         private readonly ICartItemService _cartItemService;
         private readonly ICartService _cartService;
 
-        public CartController(IUnitOfWork unitOfWork, IMapper mapper,
+        public CartController(
         ICartItemService cartItemService,
         ICartService cartService)
         {
@@ -45,7 +43,12 @@ namespace Market.Controllers
             //var cartItem = _mapper.Map<CartItem>(cartItemCreateDto);
 
             //var cart = await _unitOfWork.Carts.GetCartByClientIdAsync(cartItemCreateDto.ClientId);
-            string clientId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim == null)
+            {
+                return Unauthorized("Client ID not found");
+            }
+            string clientId = claim.Value;
             
             var cartItem = cartItemCreateDto;
 
@@ -62,7 +65,12 @@ namespace Market.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCart()
         {
-            string clientId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim == null)
+            {
+                return Unauthorized("Client ID not found");
+            }
+            string clientId = claim.Value;
 
             var cart = await _cartService.GetCart(clientId);
 
