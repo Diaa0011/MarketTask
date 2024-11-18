@@ -60,13 +60,9 @@ namespace Market.Services.Service.Service
                     ClientId = clientId
                 };
                 cart = _mapper.Map<Cart>(newcart);
-                //cart.CartItems.Add(cartItem);
                 _unitOfWork.Carts.Add(cart);
 
             }else{
-                cart.TotalAmount += cartItem.TotalPrice;
-                cart.TotalShippingCost += cartItem.ShippingCost;
-                
                 cart.CartItems.Add(cartItem);
                 _unitOfWork.Carts.Update(cart);
             }
@@ -79,7 +75,17 @@ namespace Market.Services.Service.Service
         {
             var product =  await _unitOfWork.Products.FindAsync(q =>q.Id == cartItem.ProductId);
             var store =  await _unitOfWork.Stores.FindAsync(q => q.Id == product.StoreId);
-
+            //decimal vat  = 0;
+            var cartItemData = new []
+            {   new{
+                Quantity = cartItem.Quantity,
+                Price = product.Price*cartItem.Quantity,
+                vat = product.VAT,
+                TotalVat = product.Price * product.VAT * cartItem.Quantity,
+                ShippingCost = store.ShippingCost * cartItem.Quantity,
+                TotalPrice = product.Price * cartItem.Quantity + product.Price * product.VAT * cartItem.Quantity + store.ShippingCost * cartItem.Quantity
+                }
+            };
         if (product == null || store == null || cart == null)
         {
             return null;
@@ -89,31 +95,41 @@ namespace Market.Services.Service.Service
         {
             cartItem.Product = product;
             cartItem.cart = cart;
-            cartItem.Price = product.Price * cartItem.Quantity;
-            cartItem.TotalVat = product.VAT * cartItem.Quantity;
-            cartItem.ShippingCost = store.ShippingCost;
-            cartItem.TotalPrice = cartItem.Price + cartItem.TotalVat + cartItem.ShippingCost;
+            cartItem.Price = cartItemData[0].Price;
+            cartItem.Quantity = cartItemData[0].Quantity;
+            cartItem.TotalVat = cartItemData[0].TotalVat;
+            cartItem.ShippingCost = cartItemData[0].ShippingCost;
+            cartItem.TotalPrice = cartItemData[0].TotalPrice;
+            cart.TotalAmount += cartItemData[0].TotalPrice; 
+            cart.TotalShippingCost += cartItemData[0].ShippingCost;
             return cartItem;
         }
         foreach(var cartSearch in cartItems)
         {
             if (cartSearch.ProductId == cartItem.ProductId)
             {
-                cartSearch.Quantity += cartItem.Quantity;
-                cartSearch.Price += (product.Price * cartItem.Quantity);
-                cartSearch.TotalVat += product.VAT * cartItem.Quantity;
-                cartSearch.TotalPrice += (cartSearch.Price + cartSearch.TotalVat);
-                //productFound = true;
+                var beforeAdd = cartSearch.TotalPrice;
+                cartSearch.Quantity += cartItemData[0].Quantity;
+                cartSearch.Price += cartItemData[0].Price;
+                cartSearch.TotalVat += cartItemData[0].TotalVat; 
+                cartSearch.TotalPrice += cartItemData[0].TotalPrice;
+                cartSearch.ShippingCost += cartItemData[0].ShippingCost;
+                var afterAdd = cartSearch.TotalPrice;
+                var addedValue = afterAdd - beforeAdd;
+                cart.TotalAmount += addedValue; 
+                cart.TotalShippingCost += Convert.ToInt32(cartItemData[0].ShippingCost);
                 return cartSearch;
             }
             
         }
         cartItem.Product = product;
         cartItem.cart = cart;
-        cartItem.Price = product.Price * cartItem.Quantity;
-        cartItem.TotalVat = product.VAT * cartItem.Quantity;
-        cartItem.ShippingCost = store.ShippingCost;
-        cartItem.TotalPrice = cartItem.Price + cartItem.TotalVat + cartItem.ShippingCost;
+        cartItem.Price = cartItemData[0].Price;
+        cartItem.TotalVat += cartItemData[0].TotalVat;
+        cartItem.ShippingCost = cartItemData[0].ShippingCost;
+        cartItem.TotalPrice = cartItemData[0].TotalPrice;
+        cart.TotalAmount += cartItem.TotalPrice; 
+        cart.TotalShippingCost += cartItemData[0].ShippingCost;
         return cartItem;
 
     }
