@@ -23,9 +23,6 @@ namespace Market.Services.Service.Service
         {
             var cartItem = _mapper.Map<CartItem>(cartItemCreateDto);
 
-            
-            
-            //var cartId = _unitOfWork.Carts.Find(c => c.ClientId == clientId).CartId;
             var cartSearch = _unitOfWork.Carts.Find(c => c.ClientId == clientId);
 
             if (cartSearch == null)
@@ -46,11 +43,32 @@ namespace Market.Services.Service.Service
 
         }
 
-        public async Task<bool> RemoveFromCart()
+        public async Task<bool> RemoveFromCart(string clientId,CartItemRemoveDto cartItemRemoveDto)
         {
-            throw new NotImplementedException();
-        }
+            var cartItemToRemove = cartItemRemoveDto;
 
+            var cart = _unitOfWork.Carts.Find(c => c.ClientId == clientId);
+
+
+            
+            if(cartItemToRemove == null || cart == null)
+            {
+                return false;
+            }  
+
+            bool result = await CartItemRemover(cartItemToRemove, cart);
+
+            if(result)
+            {
+                return true;
+            }else
+            {
+                return false;
+            }
+
+            
+        }
+       
         private async Task<Cart> cartUpsert(Cart? cart, CartItem? cartItem, string clientId)
         {
             if (cart == null)
@@ -133,5 +151,59 @@ namespace Market.Services.Service.Service
         return cartItem;
 
     }
+     private async Task<bool> CartItemRemover(CartItemRemoveDto cartItem, Cart cart)
+        {
+            var product =  await _unitOfWork.Products.FindAsync(q =>q.Id == cartItem.ProductId);
+            var store =  await _unitOfWork.Stores.FindAsync(q => q.Id == product.StoreId);
+            var cartItemData = new []
+            {   new{
+                Quantity = cartItem.Quantity,
+                Price = product.Price*cartItem.Quantity,
+                vat = product.VAT,
+                TotalVat = product.Price * product.VAT * cartItem.Quantity,
+                ShippingCost = store.ShippingCost * cartItem.Quantity,
+                TotalPrice = product.Price * cartItem.Quantity + product.Price * product.VAT * cartItem.Quantity + store.ShippingCost * cartItem.Quantity
+                }
+            };
+            if (product == null || store == null || cart == null)
+            {
+                return false;
+            }else if(cartItemData[0].Quantity < 0)
+            {
+                return false;
+            }else if(cartItemData[0].Quantity > 0)
+            {
+                var cartItemReal = await _unitOfWork.CartItems.FindAsync(q => q.ProductId == cartItem.ProductId);
+                var beforeRemove = cartItemReal.TotalPrice;
+                cartItemReal.Quantity -= cartItemData[0].Quantity;
+                cartItemReal.Price -= cartItemData[0].Price;
+                cartItemReal.TotalVat -= cartItemData[0].TotalVat; 
+                cartItemReal.TotalPrice -= cartItemData[0].TotalPrice;
+                cartItemReal.ShippingCost -= cartItemData[0].ShippingCost;
+                var afterRemove = cartItemReal.TotalPrice;
+                var removedValue = beforeRemove - afterRemove;
+                cart.TotalAmount -= removedValue; 
+                cart.TotalShippingCost -= Convert.ToInt32(cartItemData[0].ShippingCost);
+                await _unitOfWork.SaveAsync();
+                var cartItems = await _unitOfWork.CartItems.FindAllAsync(q => q.CartId == cart.CartId);
+                List<CartItem> cartItemsList = cartItems.ToList();
+                if(cartItemReal.Quantity == 0)
+                {
+                    _unitOfWork.CartItems.Delete(cartItemReal);
+                    cartItemsList.Remove(cartItemReal);
+                    _unitOfWork.Carts.Update(cart);
+                    await _unitOfWork.SaveAsync();
+                }
+                
+                if(cartItemsList.Count == 0)
+                {
+                    _unitOfWork.Carts.Delete(cart);
+                    await _unitOfWork.SaveAsync();
+                }
+                return true;
+            }else{
+                return false;
+            }
+        }
     }
 }

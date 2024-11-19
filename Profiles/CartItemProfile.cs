@@ -11,6 +11,7 @@ namespace Market.Profiles
             CreateMap<CartItemCreateDto, CartItem>();
             CreateMap<CartItem, CartItemReadDto>()
                 .ForMember(dest => dest.cartId, opt => opt.MapFrom(src => src.cart.CartId));
+            CreateMap<CartItemRemoveDto, CartItem>();
             CreateMap<CartItem, CartItemInCartDto>();
             CreateMap<CartItemEditDto, CartItem>();
 

@@ -40,10 +40,9 @@ namespace Market.Controllers
         [HttpPost]
         public async Task<IActionResult> AddItemToCart(CartItemCreateDto cartItemCreateDto)
         {
-            //var cartItem = _mapper.Map<CartItem>(cartItemCreateDto);
-
-            //var cart = await _unitOfWork.Carts.GetCartByClientIdAsync(cartItemCreateDto.ClientId);
+            
             var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+
             if (claim == null)
             {
                 return Unauthorized("Client ID not found");
@@ -70,16 +69,38 @@ namespace Market.Controllers
             {
                 return Unauthorized("Client ID not found");
             }
+
             string clientId = claim.Value;
 
             var cart = await _cartService.GetCart(clientId);
 
             if (cart == null)
             {
-                return NotFound("Cart not found");
+                return NotFound("Client has no cart, try to add items to cart"); 
             }
 
             return Ok(cart);
+        }
+        [HttpDelete]
+        public async Task<IActionResult> RemoveItemFromCart(CartItemRemoveDto cartItemRemoveDto)
+        {
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim == null)
+            {
+                return Unauthorized("Client ID not found");
+            }
+            string clientId = claim.Value;
+
+            var result = await _cartItemService.RemoveFromCart(clientId, cartItemRemoveDto);
+
+            if (result)
+            {
+                return Ok("Item removed from cart successfully");
+            }
+            else
+            {
+                return BadRequest("Failed to remove item from cart");
+            }
         }
         
         /*

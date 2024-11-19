@@ -26,6 +26,10 @@ namespace Market.Services.Service.Service
                 return null;
             }
             var gottenCart = await _unitOfWork.Carts.GetCartByClientIdAsync(clientId);
+            if(gottenCart == null)
+            {
+                return null;
+            }
             var cartId = gottenCart.CartId;
             var cart = await _unitOfWork.Carts.GetByIdAsync(cartId);
             var cartReadDto = _mapper.Map<CartReadDto>(cart);
