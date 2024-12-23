@@ -1,0 +1,6 @@
+E:\AlexApps\MarketTask\src\MarketTask.Presentation\obj\Debug\net8.0\MarketTask.Presentation.csproj.AssemblyReference.cache
+E:\AlexApps\MarketTask\src\MarketTask.Presentation\obj\Debug\net8.0\MarketTask.Presentation.GeneratedMSBuildEditorConfig.editorconfig
+E:\AlexApps\MarketTask\src\MarketTask.Presentation\obj\Debug\net8.0\MarketTask.Presentation.AssemblyInfoInputs.cache
+E:\AlexApps\MarketTask\src\MarketTask.Presentation\obj\Debug\net8.0\MarketTask.Presentation.AssemblyInfo.cs
+E:\AlexApps\MarketTask\src\MarketTask.Presentation\obj\Debug\net8.0\MarketTask.Presentation.csproj.CoreCompileInputs.cache
+E:\AlexApps\MarketTask\src\MarketTask.Presentation\obj\Debug\net8.0\MarketTask.Presentation.sourcelink.json

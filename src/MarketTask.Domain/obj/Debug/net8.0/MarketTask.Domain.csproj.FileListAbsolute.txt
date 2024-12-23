@@ -1,0 +1,13 @@
+E:\AlexApps\MarketTask\src\MarketTask.Domain\bin\Debug\net8.0\MarketTask.Domain.deps.json
+E:\AlexApps\MarketTask\src\MarketTask.Domain\bin\Debug\net8.0\MarketTask.Domain.dll
+E:\AlexApps\MarketTask\src\MarketTask.Domain\bin\Debug\net8.0\MarketTask.Domain.pdb
+E:\AlexApps\MarketTask\src\MarketTask.Domain\obj\Debug\net8.0\MarketTask.Domain.csproj.AssemblyReference.cache
+E:\AlexApps\MarketTask\src\MarketTask.Domain\obj\Debug\net8.0\MarketTask.Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\AlexApps\MarketTask\src\MarketTask.Domain\obj\Debug\net8.0\MarketTask.Domain.AssemblyInfoInputs.cache
+E:\AlexApps\MarketTask\src\MarketTask.Domain\obj\Debug\net8.0\MarketTask.Domain.AssemblyInfo.cs
+E:\AlexApps\MarketTask\src\MarketTask.Domain\obj\Debug\net8.0\MarketTask.Domain.csproj.CoreCompileInputs.cache
+E:\AlexApps\MarketTask\src\MarketTask.Domain\obj\Debug\net8.0\MarketTask.Domain.sourcelink.json
+E:\AlexApps\MarketTask\src\MarketTask.Domain\obj\Debug\net8.0\MarketTask.Domain.dll
+E:\AlexApps\MarketTask\src\MarketTask.Domain\obj\Debug\net8.0\refint\MarketTask.Domain.dll
+E:\AlexApps\MarketTask\src\MarketTask.Domain\obj\Debug\net8.0\MarketTask.Domain.pdb
+E:\AlexApps\MarketTask\src\MarketTask.Domain\obj\Debug\net8.0\ref\MarketTask.Domain.dll
