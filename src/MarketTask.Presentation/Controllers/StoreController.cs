@@ -1,17 +1,15 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
-using Market.Data;
-using Market.Dtos.Store;
-using Market.Model;
-using Market.Services.Repository.IRepository;
-using Market.Services.Service.IService;
+using MarketTask.Application.Dtos.Store;
+using MarketTask.Application.Services.IService;
+using MarketTask.Infrastructure.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.JsonPatch;
 
-namespace Market.Controllers
+
+
+namespace MarketTask.Presentation.Controllers
 {
     [Authorize(Roles = "merchant")]
     [Route("api/[controller]")]
@@ -20,20 +18,17 @@ namespace Market.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly AppDbContext _context;
         private readonly IStoreService _storeService;
         public StoreController(IUnitOfWork unitOfWork,
          IMapper mapper,
-         IStoreService storeService,
-        AppDbContext context
+         IStoreService storeService
          )
         {
             _unitOfWork = unitOfWork ??
                 throw new ArgumentNullException(nameof(unitOfWork));
             _mapper = mapper ??
                 throw new ArgumentNullException(nameof(mapper));
-            _context = context ??
-                throw new ArgumentNullException(nameof(context));
+
             _storeService = storeService ??
                 throw new ArgumentNullException(nameof(storeService));
         }

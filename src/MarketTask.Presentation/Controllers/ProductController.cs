@@ -1,36 +1,19 @@
-﻿using AutoMapper;
-using Market.Dtos.Product;
-using Market.Dtos.Store;
-using Market.Services.Repository.IRepository;
-using Microsoft.AspNetCore.Http;
+﻿using MarketTask.Application.Services.IService;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using System.Runtime.InteropServices.Marshalling;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Authorization;
-using Services.Service.IService;
-using Market.Model;
+using MarketTask.Application.Dtos.Product;
 
-namespace Market.Controllers
+namespace MarketTask.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
     {
-        /*private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;*/
-
         private readonly IProductService _productService;
 
-        public ProductController(IUnitOfWork unitOfWork, IMapper mapper,IProductService productService)
+        public ProductController(IProductService productService)
         {
-            /*_unitOfWork = unitOfWork ?? 
-                throw new ArgumentNullException(nameof(unitOfWork));
-            _mapper = mapper ??
-                throw new ArgumentNullException(nameof(mapper));*/
             _productService = productService ??
                 throw new ArgumentNullException(nameof(productService));
         }
@@ -38,14 +21,12 @@ namespace Market.Controllers
         // [ProducesResponseType(200,Type=typeof(IEnumerable<ProductWithStoreReadDto>))] --> for documentation
         public async Task<IActionResult> GetAllProducts()
         {
-            //var products = await _unitOfWork.Products.GetAllProductsAsync();
             var products = await _productService.GetAllProducts();
             return Ok(products);
         }
         [HttpGet("id/{id}",Name = "GetProductById"), Authorize(Roles = "user,merchant")]
         public async Task<IActionResult> GetProductById(int id)
         {
-            //var product = await _unitOfWork.Products.GetProductByIdAsync(id);
             var product = await _productService.GetProductById(id);
             return Ok(product);
         }

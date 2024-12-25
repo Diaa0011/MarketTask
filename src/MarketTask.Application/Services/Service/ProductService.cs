@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using AutoMapper;
 using MarketTask.Application.Dtos.Product;
 using MarketTask.Application.Services.IService;
@@ -6,7 +5,6 @@ using MarketTask.Domain.Entites;
 using MarketTask.Infrastructure.Repository.IRepository;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration; // For IConfiguration
 using Microsoft.AspNetCore.Http; // For IHttpContextAccessor
 namespace Market.Services.Service.Service
 {

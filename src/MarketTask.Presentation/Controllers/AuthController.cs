@@ -1,12 +1,9 @@
-﻿using AutoMapper;
-using Market.Dtos.User;
-using Market.Services.Repository;
-using Market.Services.Repository.IRepository;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using MarketTask.Infrastructure.Repository.IRepository;
+using MarketTask.Application.Dtos.User;
+using MarketTask.Application.Services.IService;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Market.Controllers
+namespace MarketTask.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

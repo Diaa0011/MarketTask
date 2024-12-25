@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Market.Data;
-using Microsoft.AspNetCore.Builder;
-using Market.Services.Repository.IRepository;
-using Market.Services.Repository;
-
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using System.Text.Json;
@@ -14,14 +9,20 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Swashbuckle.AspNetCore.Filters;
 using Market.Services.Service;
-using Market.Services.Repository.Repository;
-using Market.Services.Service.IService;
-using Services.Service.IService;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
+
 using Market.Services.Service.Service;
+using MarketTask.Infrastructure.Data;
+using MarketTask.Infrastructure.Repository.IRepository;
+using MarketTask.Infrastructure.Repository.Repository;
+using MarketTask.Application.Services.IService;
+using MarketTask.Application.Services.Service;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<AppDbContext>(options=>
+builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
