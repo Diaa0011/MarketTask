@@ -11,7 +11,6 @@ using Swashbuckle.AspNetCore.Filters;
 using Market.Services.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
-
 using Market.Services.Service.Service;
 using MarketTask.Infrastructure.Data;
 using MarketTask.Infrastructure.Repository.IRepository;
